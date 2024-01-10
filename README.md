@@ -1,3 +1,7 @@
+[![CI](https://github.com/dmikrv/Dvigunity.IsolatedFunction/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/dmikrv/Dvigunity.IsolatedFunction/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/dmikrv/Dvigunity.IsolatedFunction/blob/master/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Kravchuk.IsolatedFunction?label=NuGet)](https://www.nuget.org/packages/Kravchuk.IsolatedFunction)
+
 # Dvigunity.IsolatedFunction
 
 ## Authentication & Authorization
