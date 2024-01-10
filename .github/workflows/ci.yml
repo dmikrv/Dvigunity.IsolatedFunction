@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  workflow_dispatch:  # Allow running the workflow manually from the GitHub UI
+  push:
+    branches:
+      - master          # Run the workflow when pushing to the main branch
+  pull_request:
+    branches:
+      - '*'             # Run the workflow for all pull requests
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: pwsh
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Run the workflow for all pull requests
+
+      - name: Build and Test
+        env:
+          PACKAGE_VERSION: 0.0.0
+        run: ./Build.ps1
+
+      - name: Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          if-no-files-found: error
+          retention-days: 7
+          path: artifacts/**/*

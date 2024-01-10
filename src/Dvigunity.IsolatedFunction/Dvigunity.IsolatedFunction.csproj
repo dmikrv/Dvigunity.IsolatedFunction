@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>Kravchuk.IsolatedFunction</PackageId>
+        <Title>Isolated function</Title>
+        <Summary>Isolated function.</Summary>
+        <Description>AIsolated function.</Description>
+
+        <Authors>Dvigunity</Authors>
+        <Copyright>Copyright © Dvigunity 2024</Copyright>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>azure, functions, isolated</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <Deterministic>true</Deterministic>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.16.0"/>
+        <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.1.2"/>
+        
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <None Include="..\..\icon.png" Pack="true" PackagePath="" Visible="False" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="" Visible="False"/>
+    </ItemGroup>
+
+</Project>
