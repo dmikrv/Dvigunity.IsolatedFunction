@@ -69,8 +69,6 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
             // Set principal in Features collection
             // It can be accessed from here later in the call chain
             context.Features.Set(principal);
-
-            await next(context);
         }
         catch (ArgumentException)
         {
@@ -84,6 +82,8 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
         {
             throw new AuthenticationException("Token's signature is not properly formatted.", "Token is not valid");
         }
+        
+        await next(context);
     }
 
     private static bool TryGetTokenFromHeaders(FunctionContext context, out string? token)
