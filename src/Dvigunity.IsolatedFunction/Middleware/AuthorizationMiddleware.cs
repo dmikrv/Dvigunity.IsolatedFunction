@@ -5,6 +5,7 @@ using Dvigunity.IsolatedFunction.Exceptions;
 using Dvigunity.IsolatedFunction.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Dvigunity.IsolatedFunction.Middleware;
@@ -13,10 +14,14 @@ public class AuthorizationMiddleware : IFunctionsWorkerMiddleware
 {
     private const string ScopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
     private readonly IOptions<AuthorizationOptions> _authorizationOptions;
+    private readonly ILogger<AuthorizationMiddleware> _logger;
     
-    public AuthorizationMiddleware(IOptions<AuthorizationOptions> authorizationOptions)
+    public AuthorizationMiddleware(
+        IOptions<AuthorizationOptions> authorizationOptions,
+        ILogger<AuthorizationMiddleware> logger)
     {
         _authorizationOptions = authorizationOptions;
+        _logger = logger;
     }
     
     public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
@@ -25,6 +30,7 @@ public class AuthorizationMiddleware : IFunctionsWorkerMiddleware
         
         if (claimsPrincipal is null)
         {
+            _logger.LogInformation("No claims principal found, skipping authorization");
             await next(context);
             return;
         }

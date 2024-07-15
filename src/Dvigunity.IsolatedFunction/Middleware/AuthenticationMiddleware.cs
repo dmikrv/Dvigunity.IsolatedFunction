@@ -7,6 +7,7 @@ using Dvigunity.IsolatedFunction.Exceptions;
 using Dvigunity.IsolatedFunction.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -16,19 +17,20 @@ namespace Dvigunity.IsolatedFunction.Middleware;
 
 public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
 {
-    private readonly IOptions<AuthenticationOptions> _authenticationOptions;
     private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
-    private readonly IOptions<JwtBearerOptions> _jwtBearerOptions;
+    private readonly ILogger<AuthenticationMiddleware> _logger;
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly JwtSecurityTokenHandler _tokenValidator;
     
-    public AuthenticationMiddleware(IOptions<AuthenticationOptions> authenticationOptions,
-        IOptions<JwtBearerOptions> jwtBearerOptions)
+    public AuthenticationMiddleware(IOptions<JwtBearerOptions> jwtBearerOptions,
+        ILogger<AuthenticationMiddleware> logger)
     {
-        _authenticationOptions = authenticationOptions;
-        _jwtBearerOptions = jwtBearerOptions;
-        var authority = jwtBearerOptions.Value.Authority;
+        _logger = logger;
+        
+        var authority = jwtBearerOptions.Value.Authority
+                        ?? $"{jwtBearerOptions.Value.Instance}/{jwtBearerOptions.Value.TenantId}/v2.0";
         var audience = jwtBearerOptions.Value.ClientId;
+        
         _tokenValidator = new();
         _tokenValidationParameters = new()
         {
@@ -45,6 +47,7 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
         
         if (IsMethodAllowAnonymous(targetMethod))
         {
+            _logger.LogInformation("Method is marked as AllowAnonymous");
             await next(context);
             return;
         }
