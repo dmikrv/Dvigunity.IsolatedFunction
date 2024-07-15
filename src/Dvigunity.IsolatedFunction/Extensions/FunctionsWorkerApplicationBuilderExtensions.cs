@@ -7,35 +7,31 @@ namespace Dvigunity.IsolatedFunction.Extensions;
 
 public static class FunctionsWorkerApplicationBuilderExtensions
 {
-    public static IFunctionsWorkerApplicationBuilder UseIsolatedFunctionAuthentication(this IFunctionsWorkerApplicationBuilder worker,
-        bool bypassNoHttp = true, bool bypassSwagger = true)
+    public static IFunctionsWorkerApplicationBuilder UseIsolatedFunctionAuthentication(this IFunctionsWorkerApplicationBuilder worker)
     {
         return worker.UseWhen<AuthenticationMiddleware>(ctx =>
         {
-            if (bypassSwagger && ctx.FunctionDefinition.Name.Contains("Swagger"))
+            if (ctx.FunctionDefinition.Name.Contains("Swagger"))
                 return false;
 
-            if (bypassNoHttp)
-                // use this middleware only for http trigger invocations
-                return ctx.FunctionDefinition.InputBindings.Values
-                    .First(a => a.Type.EndsWith("Trigger")).Type == "httpTrigger";
+            var isHttpTrigger = ctx.FunctionDefinition.InputBindings.Values.Any(a => a.Type == "httpTrigger");
+            if (!isHttpTrigger)
+                return false;
 
             return true;
         });
     }
 
-    public static IFunctionsWorkerApplicationBuilder UseIsolatedFunctionAuthorization(this IFunctionsWorkerApplicationBuilder worker,
-        bool bypassNoHttp = true, bool bypassSwagger = true)
+    public static IFunctionsWorkerApplicationBuilder UseIsolatedFunctionAuthorization(this IFunctionsWorkerApplicationBuilder worker)
     {
         return worker.UseWhen<AuthorizationMiddleware>(ctx =>
         {
-            if (bypassSwagger && ctx.FunctionDefinition.Name.Contains("Swagger"))
+            if (ctx.FunctionDefinition.Name.Contains("Swagger"))
                 return false;
 
-            if (bypassNoHttp)
-                // use this middleware only for http trigger invocations
-                return ctx.FunctionDefinition.InputBindings.Values
-                    .First(a => a.Type.EndsWith("Trigger")).Type == "httpTrigger";
+            var isHttpTrigger = ctx.FunctionDefinition.InputBindings.Values.Any(a => a.Type == "httpTrigger");
+            if (!isHttpTrigger)
+                return false;
 
             return true;
         });

@@ -43,7 +43,7 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
     {
         var targetMethod = context.GetTargetFunctionMethod();
 
-        if (IsMethodAllowAnnonymous(targetMethod))
+        if (IsMethodAllowAnonymous(targetMethod))
         {
             await next(context);
             return;
@@ -113,7 +113,7 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
         return true;
     }
 
-    private static bool IsMethodAllowAnnonymous(MethodInfo targetMethod)
+    private static bool IsMethodAllowAnonymous(MethodInfo targetMethod)
     {
         return GetCustomAttributesOnClassAndMethod<AllowAnonymousAttribute>(targetMethod).Any();
     }
