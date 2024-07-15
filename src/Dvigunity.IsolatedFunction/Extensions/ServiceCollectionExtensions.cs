@@ -17,23 +17,23 @@ public static class ServiceCollectionExtensions
             DefaultScheme = defaultScheme
         });
         services.AddSingleton(ioptions);
-
-        return new IsolatedFunctionAuthenticationBuilder(services, ioptions);
+        
+        return new(services, ioptions);
     }
-
+    
     public static IsolatedFunctionAuthorizationBuilder AddIsolatedFunctionAuthorization(this IServiceCollection services)
     {
         var options = new AuthorizationOptions
         {
-            RequiredScopes = new HashSet<string>()
+            RequiredScopes = new()
         };
-
+        
         var ioptions = Options.Create(options);
         services.AddSingleton(ioptions);
-
-        return new IsolatedFunctionAuthorizationBuilder(services, Options.Create(options));
+        
+        return new(services, Options.Create(options));
     }
-
+    
     public static IServiceCollection AddFunctionContextAccessor(this IServiceCollection services)
     {
         // The accessor itself should be registered as a singleton, but the context

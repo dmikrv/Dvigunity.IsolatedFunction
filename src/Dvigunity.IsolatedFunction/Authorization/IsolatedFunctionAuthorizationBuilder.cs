@@ -18,19 +18,21 @@ public class IsolatedFunctionAuthorizationBuilder
         Services = services;
         AuthorizationOptions = authorizationOptions;
     }
-
+    
     /// <summary>
     ///     The services being configured.
     /// </summary>
     public virtual IServiceCollection Services { get; }
-
+    
     protected virtual IOptions<AuthorizationOptions> AuthorizationOptions { get; }
-
+    
     public IsolatedFunctionAuthorizationBuilder AddRequiredScope(params string[] scopes)
     {
         foreach (var scope in scopes)
+        {
             AuthorizationOptions.Value.RequiredScopes.Add(scope);
-
+        }
+        
         return this;
     }
 }

@@ -21,13 +21,13 @@ public class AuthorizeAttribute : Attribute
     ///     must be combined with <see cref="UserRoles" />.
     /// </summary>
     public string[] Scopes { get; set; } = Array.Empty<string>();
-
+    
     /// <summary>
     ///     Defines which user roles are accpeted.
     ///     Must be combined with <see cref="Scopes" />.
     /// </summary>
     public string[] UserRoles { get; set; } = Array.Empty<string>();
-
+    
     /// <summary>
     ///     Defines which app roles (aka application permissions)
     ///     are accepted.

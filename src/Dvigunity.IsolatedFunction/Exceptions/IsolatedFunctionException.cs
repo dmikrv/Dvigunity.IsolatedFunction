@@ -22,8 +22,8 @@ public class IsolatedFunctionException : Exception
         Title = localizedTitle;
         StatusCode = httpStatusCode;
     }
-
+    
     public string? Title { get; }
-
+    
     public HttpStatusCode StatusCode { get; }
 }

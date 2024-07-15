@@ -18,11 +18,11 @@ public class IsolatedFunctionAuthenticationBuilder
         Services = services;
         AuthenticationOptions = authenticationOptions;
     }
-
+    
     /// <summary>
     ///     The services being configured.
     /// </summary>
     public virtual IServiceCollection Services { get; }
-
+    
     protected virtual IOptions<AuthenticationOptions> AuthenticationOptions { get; }
 }

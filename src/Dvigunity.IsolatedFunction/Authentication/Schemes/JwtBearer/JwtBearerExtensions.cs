@@ -14,10 +14,10 @@ public static class JwtBearerExtensions
     {
         var configurationSection = configuration.GetSection(configSectionName);
         var options = configurationSection.Get<JwtBearerOptions>();
-
+        
         var ioptions = Options.Create(options);
         builder.Services.AddSingleton(ioptions);
-
+        
         return builder;
     }
 }

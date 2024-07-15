@@ -13,7 +13,7 @@ public static class FunctionContextExtensions
         var httpResponse = httpRequest!.CreateResponse(statusCode);
         SetHttpResponse(context, httpResponse);
     }
-
+    
     public static async Task SetHttpResponseAsync<T>(this FunctionContext context, T writeData, HttpStatusCode statusCode)
     {
         var httpRequest = await context.GetHttpRequestDataAsync();
@@ -21,14 +21,14 @@ public static class FunctionContextExtensions
         await httpResponse.WriteAsJsonAsync(writeData, statusCode);
         SetHttpResponse(context, httpResponse);
     }
-
+    
     public static MethodInfo GetTargetFunctionMethod(this FunctionContext context)
     {
         // More terrible reflection code..
         // Would be nice if this was available out of the box on FunctionContext
-
+        
         var entryPoint = context.FunctionDefinition.EntryPoint;
-
+        
         var assemblyPath = context.FunctionDefinition.PathToAssembly;
         var assembly = Assembly.LoadFrom(assemblyPath);
         var typeName = entryPoint[..entryPoint.LastIndexOf('.')];
@@ -37,24 +37,28 @@ public static class FunctionContextExtensions
         var method = type!.GetMethod(methodName)!;
         return method;
     }
-
+    
     public static void SetHttpResponse(this FunctionContext context, HttpResponseData httpResponseData)
     {
         var invocationResult = context.GetInvocationResult();
-
+        
         var httpOutputBindingFromMultipleOutputBindings = GetHttpOutputBindingFromMultipleOutputBinding(context);
         if (httpOutputBindingFromMultipleOutputBindings is not null)
+        {
             httpOutputBindingFromMultipleOutputBindings.Value = httpResponseData;
+        }
         else
+        {
             invocationResult.Value = httpResponseData;
+        }
     }
-
+    
     private static OutputBindingData<HttpResponseData>? GetHttpOutputBindingFromMultipleOutputBinding(FunctionContext context)
     {
         // The output binding entry name will be "$return" only when the function return type is HttpResponseData
         var httpOutputBinding = context.GetOutputBindings<HttpResponseData>()
             .FirstOrDefault(b => b.BindingType == "http" && b.Name != "$return");
-
+        
         return httpOutputBinding;
     }
 }
